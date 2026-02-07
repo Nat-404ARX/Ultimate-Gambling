@@ -5,26 +5,31 @@ let money = 5;
 
 let isSpinning = false;
 
+let spinsWithoutWin = 0;
+
+
 function updateMoney(amount) {
     money += amount;
     document.getElementById("money").textContent = `💰 ${money}$`;
 }
 
 
-function spinReel(reel, duration, callback) {
+function spinReel(reel, duration, callback, forcedIndex = null) {
     let position = 0;
 
     const interval = setInterval(() => {
-        position = (position + 100) % (symbols.length * 100);
+        position = (position + 1000) % (symbols.length * 100); //vitesse de tournage
         reel.style.transform = `translateY(-${position}px)`;
     }, 600);
 
     setTimeout(() => {
         clearInterval(interval);
 
-        const finalIndex = getRandomSymbolIndex();
+        const finalIndex = forcedIndex !== null
+            ? forcedIndex
+            : getRandomSymbolIndex();
+        
         reel.style.transform = `translateY(-${finalIndex * 100}px)`;
-
         callback(finalIndex);
     }, duration);
 }
@@ -39,30 +44,48 @@ function getRandomSymbolIndex() {
     }
 }
 
+function getGuaranteedSymbolIndex() {
+    const commonSymbols = symbols.filter(s => s.weight >= 50); //poids maximals quand on garantie une victoire
+    const chosen = commonSymbols[Math.floor(Math.random() * commonSymbols.length)];
+    return symbols.indexOf(chosen);
+}
+
+
 
 function spinAll() {
     if (isSpinning) return;
         isSpinning = true;
+        lever.style.backgroundColor = "var(--bg-element)"
     results = [];
     updateText("EN ATTENTE DU RESULTAT");
-    playSound("sound-spin");
+    playRandomSpinSound();
+
+    const forceWin = (spinsWithoutWin >= 2);
+    let forcedIndex = null;
+
+    if (forceWin) {
+        forcedIndex = getGuaranteedSymbolIndex();
+    }
+
     reels.forEach((reel, index) => {
         setTimeout(() => {
-            spinReel(reel, 2000 + index * 500, (result) => {
+            spinReel(reel, 2500 + index * 800, (result) => {  //temps de tournage
                 results[index] = result;
 
                 if (results.filter(r => r !== undefined).length === 3) {
                     checkWin();
-                    document.getElementById("sound-spin").pause();
                 }
-            });
-        }, index * 500);
+            },
+            forceWin ? forcedIndex : null
+        );
+        }, index * 600); //dalai au démarage entre chaque slot
     });
 }
 
 function checkWin() {
     const [a, b, c] = results;
-    if (a === b && b === c) {
+    const isWin = (a === b && b === c);
+    if (isWin) {
         if (symbols[a].name === "seven") { //modifier le symbole de jackpot ici
             const gain = symbols[a].gain;
             updateText(`JACKPOT : +${gain}$`);
@@ -91,15 +114,22 @@ function checkWin() {
         updateMoney(-1); // coût d'une partie
         playSound("sound-lose");
     }
-    isSpinning = false;
+    
+    if (isWin) {
+        spinsWithoutWin = 0;
+    } else {
+        spinsWithoutWin++;
+    }
 
-    verifMoney()
+
 
     setTimeout(() => {
+        isSpinning = false;
+        lever.style.backgroundColor = "var(--levier)"
         updateText("REJOUER ?");
         statut.classList.add("blink");
         verifMoney()
-    }, 8000);
+    }, 5000);
 
 }
 
@@ -134,7 +164,7 @@ const symbols = [
     { name: "crane", gain: -100, weight: 15, commentaire: "Mauvais Choix" },
     { name: "pastèque", gain: 25, weight: 50, commentaire: "Yummy !" },
     { name: "requin", gain: -15, weight: 60, commentaire: "Moins 10 d'Aura" },
-    { name: "couronne", gain: 1000, weight: 5, commentaire: "Votre Altesse, vous êtes royal !" },
+    { name: "couronne", gain: 1000, weight: 5, commentaire: "Votre Altesse, vous êtes royal !" }
 ];
 
 
@@ -145,25 +175,36 @@ const MAX_PULL = 150;
 let isDragging = false;
 updateText("JOUER");
 
-const arrows = [
-    document.getElementById("a1")
-]
-
-/*
-arrows.forEach(element => {
-    element.classList.add("arrow");
-});
-*/
 
 console.log(slot1, slot2, slot3, lever, base, statut);
+
+const spinSounds = [
+    new Audio("./asset/audio/toune/slotmachine.mp3"),
+    new Audio("./asset/audio/toune/electric-slot-machine.mp3"),
+    new Audio("./asset/audio/toune/roulette-casino.mp3"),
+    new Audio("./asset/audio/toune/slotmachine-jagerhuus.mp3"),
+    new Audio("./asset/audio/toune/tourn-wheel.wav")
+];
+
+
+spinSounds.forEach(s => s.volume = 0.5);
+
+function playRandomSpinSound() {
+    const sound = spinSounds[Math.floor(Math.random() * spinSounds.length)];
+    sound.currentTime = 0;
+    sound.play();
+}
+
 
 function verifMoney() {
     if (money <= 0) {
         updateText("GAME OVER");
         isSpinning = true;
+        lever.style.backgroundColor = "var(--bg-element)"
         money = 0;
         updateMoney(money);
         document.getElementById("slots").style.backgroundColor = "#a40202";
+        bgMusic.pause()
         playSound("sound-game-over");
     }
 }
@@ -183,7 +224,7 @@ function updateCommentaire(text) {
 
     setTimeout(() => {
         document.getElementById("commentaire").textContent = "";
-    }, 3500)
+    }, 5500)
 }
 
 
@@ -233,7 +274,7 @@ function playSound(id) {
 
 const bgMusic = document.getElementById("bg-music");
 const clickSound = document.getElementById("sound-click")
-bgMusic.volume = 0.05; 
+bgMusic.volume = 0.25; 
 clickSound.volume = 0.6;
 
 let musicStarted = false;
@@ -256,3 +297,5 @@ function toggleMute() {
     muted = !muted;
     document.querySelectorAll("audio").forEach(a => a.muted = muted);
 }
+
+//idée mettre un symbole qui fait perdre instant le joueur

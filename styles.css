@@ -14,6 +14,7 @@
 :root {
     --bg: #8D9AAE;
     --bg-element: #2B2E42;
+    --bg-main: #758090;
     --bg-slot: #EDF2F4;
     --border: #EDF2F4;
     --border-slot: #EE2449;
@@ -46,6 +47,8 @@ main {
     gap: 30px;
     justify-content: center;
     align-items: center;
+    background-color: var(--bg-main);
+    border-radius: 15px;
 }
 
 #slots {
@@ -57,7 +60,7 @@ main {
     width: 650px;
     background-color: var(--bg-element);
     padding: 20px 35px;
-    border: var(--border) solid 4px;
+    border: var(--border) solid 6px;
     border-radius: 15px;
 }
 
@@ -65,7 +68,7 @@ main {
     width: 100px;
     height: 100px;
     overflow: hidden;
-    border: 3px solid var(--border-slot);
+    border: 5px solid var(--border-slot);
     background: var(--bg-slot);
     border-radius: 7px;
     padding: 15px;
@@ -116,7 +119,7 @@ main {
 }
 
 h1 {
-    font-size: 58px;
+    font-size: 68px;
     color: var(--text);
 }
 
@@ -139,7 +142,7 @@ h1 {
     font-size: 58px;
     color: var(--text-detail);
     padding-left: 150px;
-    padding-top: 50px;
+    padding-top: 5px;
 }
 
 @keyframes shake {
@@ -154,7 +157,7 @@ h1 {
     color: var(--text-detail);
     text-shadow: 0 0 15px var(--jackpot);
     animation: shake 0.5s infinite;
-    font-size: 70px;
+    font-size: 80px;
 }
 
 #aligne {
@@ -162,6 +165,7 @@ h1 {
     flex-direction: row;
     padding: 10px;
     justify-content: space-around;
+    gap: 18px;
 }
 
 #paytable {
@@ -176,8 +180,8 @@ h1 {
     margin: 0px 40px;
     border: 4px solid var(--border-pay);
     border-radius: 15px;
-    width: 25vw;
-    font-size: 22px;
+    width: 20vw;
+    font-size: 26px;
 }
 
 li {
@@ -185,19 +189,43 @@ li {
 }
 
 .paytable_img {
-    width: 20px;
+    width: 24px;
     height: auto;
 }
+
 
 .paytable_arrow {
-    width: 25px;
+    width: 28px;
     height: auto;
+    animation: arrowBlink 1s infinite;
 }
 
-@keyframes arrow {
-    0%, 100% { src: url("./asset/images/fleche_rouche.svg"); }
-    50% { src: url("./asset/images/fleche_noir.svg"); }
+@keyframes arrowBlink {
+    0%, 100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 0.4;
+        filter: brightness(0.3);
+    }
 }
+
+
+@keyframes arrowSwap {
+    0%, 100% {
+        content: url("./asset/images/fleche_rouge.svg");
+        width: 28px;
+        scale: 0.5%;
+        
+    }
+    50% {
+        content: url("./asset/images/fleche_noir.svg");
+        width: 28px;
+        scale: 0.4%;
+    }
+}
+
 
 #commentaire {
     font-size: 35px;
@@ -205,6 +233,10 @@ li {
     height: 45px;
     width: 90vw;
     text-align: center;
+}
+
+h3 {
+    font-size: 45px;
 }
 
 .vise {
