@@ -1,0 +1,221 @@
+@font-face {
+    font-family: "casino";
+    src: url("./asset/fonts/casino_2/CasinoFlatShadow.ttf") format("truetype");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "clasique";
+    src: url("./asset/fonts/cartonsix_nc/Carton_Six.ttf") format("truetype");
+    font-weight: 500;
+}
+
+
+:root {
+    --bg: #8D9AAE;
+    --bg-element: #2B2E42;
+    --bg-slot: #EDF2F4;
+    --border: #EDF2F4;
+    --border-slot: #EE2449;
+    --border-pay: #D80536;
+
+    --base-levier: #EDF2F4;
+    --levier: #D80536;
+
+    --text: #EE2449;
+    --text-detail: #EDF2F4;
+
+    --jackpot: gold;
+
+}
+
+
+body {
+    background-color: var(--bg);
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-family: clasique;
+    max-width: 95vw;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    padding: 35px;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+#slots {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    width: 650px;
+    background-color: var(--bg-element);
+    padding: 20px 35px;
+    border: var(--border) solid 4px;
+    border-radius: 15px;
+}
+
+.slot {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border: 3px solid var(--border-slot);
+    background: var(--bg-slot);
+    border-radius: 7px;
+    padding: 15px;
+}
+
+.reel {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.8s ease-out;
+}
+
+.reel img {
+    width: 100px;
+    height: 100px;
+}
+
+.lever-container {
+    width: 50px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.lever_base {
+    background-color: var(--base-levier);
+    height: 180px;
+    width: 20px;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    border-bottom-left-radius: 25%;
+    border-bottom-right-radius: 25%;
+    transform-origin: bottom;
+}
+
+#lever {
+    width: 50px;
+    height: 50px;
+    background: var(--levier);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    cursor: grab;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 58px;
+    color: var(--text);
+}
+
+#statut {
+    width: 100wh;
+    text-align: center;
+    font-family: casino;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+#money {
+    font-size: 58px;
+    color: var(--text-detail);
+    padding-left: 150px;
+    padding-top: 50px;
+}
+
+@keyframes shake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-5px, 0); }
+    50% { transform: translate(5px, 0); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0); }
+}
+
+.jackpot {
+    color: var(--text-detail);
+    text-shadow: 0 0 15px var(--jackpot);
+    animation: shake 0.5s infinite;
+    font-size: 70px;
+}
+
+#aligne {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    justify-content: space-around;
+}
+
+#paytable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-element);
+    color: var(--text-detail);
+    text-decoration: dashed;
+    text-decoration-color: var(--border-pay);
+    padding: 10px;
+    margin: 0px 40px;
+    border: 4px solid var(--border-pay);
+    border-radius: 15px;
+    width: 25vw;
+    font-size: 22px;
+}
+
+li {
+    text-decoration-color: var(--border-pay);
+}
+
+.paytable_img {
+    width: 20px;
+    height: auto;
+}
+
+.paytable_arrow {
+    width: 25px;
+    height: auto;
+}
+
+@keyframes arrow {
+    0%, 100% { src: url("./asset/images/fleche_rouche.svg"); }
+    50% { src: url("./asset/images/fleche_noir.svg"); }
+}
+
+#commentaire {
+    font-size: 35px;
+    color: var(--text-detail);
+    height: 45px;
+    width: 90vw;
+    text-align: center;
+}
+
+.vise {
+    width: 94vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.vise_img {
+    width: 40px;
+    height: auto;
+}
