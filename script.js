@@ -1,7 +1,7 @@
 let results = [];
 const statut = document.getElementById("statut");
 
-let money = 7; //argent de départ
+let money = 5; //argent de départ
 document.getElementById("money").textContent = `💰 ${money}$`;
 
 let isSpinning = false;
@@ -153,8 +153,12 @@ function checkWin() {
             playSound("sound-jackpot");
             statut.classList.add("jackpot");
             setTimeout(() => {
+                document.getElementById("foule").volume = 0.5;
+                playSound("foule");
+            }, 900)
+            setTimeout(() => {
                 playSound("sound-jackpot-coin");
-            }, 1800)
+            }, 2800)
 
             setTimeout(() => {
                 statut.classList.remove("jackpot");
