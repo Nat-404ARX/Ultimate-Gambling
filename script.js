@@ -163,7 +163,7 @@ function checkWin() {
             setTimeout(() => {
                 playSound("sound-win-lot-coin");
             }, 1600)
-        } else if (symbols[a].name === "bombe" || symbols[a].name === "crane" || symbols[a].name === "tax" || symbols[a].name === "requin" || symbols[a].name === "araigné") {
+        } else if (symbols[a].name === "bombe" || symbols[a].name === "crane" || symbols[a].name === "tax" || symbols[a].name === "requin" || symbols[a].name === "araigné" || symbols[a].name === "poison") {
             const gain = symbols[a].gain;
             updateText(`PERDU : ${gain}$`);
             updateCommentaire(symbols[a].commentaire);
@@ -294,7 +294,11 @@ const symbols = [
     { name: "trèfle", gain: randomInt(3,6), weight: 50, commentaire: "Carte de trèfle" },
     { name: "coeur", gain: randomInt(-1,7), weight: 50, commentaire: "Carte de coeur" },
     { name: "pic", gain: randomInt(-8,12), weight: 50, commentaire: "Carte de pic" },
-    { name: "careau", gain: randomInt(1,9), weight: 50, commentaire: "Carte de careau" }
+    { name: "careau", gain: randomInt(1,9), weight: 50, commentaire: "Carte de careau" },
+    { name: "four", gain: 150, weight: 36, commentaire: "Un peu moins et c'est l'erreur" },
+    { name: "poison", gain: -1000, weight: 7, commentaire: "Empoisonné !" },
+    { name: "three", gain: 80, weight: 56, commentaire: "Pas mal" },
+    { name: "fives", gain: 350, weight: 26, commentaire: "Presque !" }
 ];
 
 
