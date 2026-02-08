@@ -133,7 +133,7 @@ function spinAll() {
             },
             forceWin ? forcedIndex : null
         );
-        }, index * 600); //dalai au démarage entre chaque slot
+        }, index * 800); //dalai au démarage entre chaque slot
     });
 }
 
@@ -154,6 +154,15 @@ function checkWin() {
             setTimeout(() => {
                 statut.classList.remove("jackpot");
             }, 2000);
+        } else if (symbols[a].name === "diamant" || symbols[a].name === "pomme d'or" || symbols[a].name === "couronne" || symbols[a].name === "trèfle" || symbols[a].name === "lingot") {
+            const gain = symbols[a].gain;
+            updateText(`GAGNE : ${gain}$`);
+            updateCommentaire(symbols[a].commentaire);
+            updateMoney(gain);
+            playSound("sound-win");
+            setTimeout(() => {
+                playSound("sound-win-lot-coin");
+            }, 1600)
         } else if (symbols[a].name === "bombe" || symbols[a].name === "crane" || symbols[a].name === "tax" || symbols[a].name === "requin" || symbols[a].name === "araigné") {
             const gain = symbols[a].gain;
             updateText(`PERDU : ${gain}$`);
@@ -281,7 +290,11 @@ const symbols = [
     { name: "tv", gain: 29, weight: 47, commentaire: "It's TV Time !" },
     { name: "cadena", gain: 0, weight: 52, commentaire: "Tu peux plus gambling, hein ?" },
     { name: "tax", gain: -50, weight: 40, commentaire: "Encore des taxs ??" },
-    { name: "lingot", gain: 5000, weight: 2, commentaire: "J'suis riche" }
+    { name: "lingot", gain: 5000, weight: 2, commentaire: "J'suis riche" },
+    { name: "trèfle", gain: randomInt(3,6), weight: 50, commentaire: "Carte de trèfle" },
+    { name: "coeur", gain: randomInt(-1,7), weight: 50, commentaire: "Carte de coeur" },
+    { name: "pic", gain: randomInt(-8,12), weight: 50, commentaire: "Carte de pic" },
+    { name: "careau", gain: randomInt(1,9), weight: 50, commentaire: "Carte de careau" }
 ];
 
 
