@@ -34,7 +34,7 @@ document.addEventListener("keydown", e => {
 document.addEventListener("keydown", e => {
     if (cheat) {
         if (e.key === "9") DEBUG_FORCE_SYMBOL = "bombe";
-        if (e.key === "8") DEBUG_FORCE_SYMBOL = "poison";
+        if (e.key === "8") DEBUG_FORCE_SYMBOL = "crane";
         if (e.key === "7") DEBUG_FORCE_SYMBOL = "araigné";
         if (e.key === "6") DEBUG_FORCE_SYMBOL = "cerise";
         if (e.key === "5") DEBUG_FORCE_SYMBOL = "cadena";
