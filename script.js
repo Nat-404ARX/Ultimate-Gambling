@@ -1,7 +1,8 @@
 let results = [];
 const statut = document.getElementById("statut");
 
-let money = 5;
+let money = 7; //argent de départ
+document.getElementById("money").textContent = `💰 ${money}$`;
 
 let isSpinning = false;
 
