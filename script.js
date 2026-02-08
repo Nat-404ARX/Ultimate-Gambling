@@ -7,6 +7,50 @@ let isSpinning = false;
 
 let spinsWithoutWin = 0;
 
+let isLock = false;
+
+let DEBUG_FORCE_SYMBOL = null;
+let cheat = false;
+
+function randomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "a") {
+        if (cheat === false) {
+            cheat = true;
+            console.log("Cheat activer");
+        } else {
+            cheat = false;
+            console.log("Cheat desactiver");
+        }
+    }
+});
+
+//changé les valeurs pour déclenché un symbole si la touche est pressé
+
+if (cheat) {
+    document.addEventListener("keydown", e => {
+        if (e.key === "9") DEBUG_FORCE_SYMBOL = "bombe";
+        if (e.key === "8") DEBUG_FORCE_SYMBOL = "crane";
+        if (e.key === "7") DEBUG_FORCE_SYMBOL = "araigné";
+        if (e.key === "6") DEBUG_FORCE_SYMBOL = "cerise";
+        if (e.key === "5") DEBUG_FORCE_SYMBOL = "cadena";
+        if (e.key === "4") DEBUG_FORCE_SYMBOL = "six";
+        if (e.key === "3") DEBUG_FORCE_SYMBOL = "poisson";
+        if (e.key === "2") DEBUG_FORCE_SYMBOL = "tv";
+        if (e.key === "1") DEBUG_FORCE_SYMBOL = "seven";
+        if (e.key === "0") DEBUG_FORCE_SYMBOL = null;
+    });
+}
+
+function getSymbolIndexByName(name) {
+    return symbols.findIndex(s => s.name === name);
+}
+
 
 function updateMoney(amount) {
     money += amount;
@@ -25,9 +69,20 @@ function spinReel(reel, duration, callback, forcedIndex = null) {
     setTimeout(() => {
         clearInterval(interval);
 
+        /*
         const finalIndex = forcedIndex !== null
             ? forcedIndex
             : getRandomSymbolIndex();
+        */
+
+        let finalIndex;
+        if (DEBUG_FORCE_SYMBOL !== null) {
+            finalIndex = getSymbolIndexByName(DEBUG_FORCE_SYMBOL);
+        } else if (forcedIndex !== null) {
+            finalIndex = forcedIndex;
+        } else {
+            finalIndex = getRandomSymbolIndex();
+        }
         
         reel.style.transform = `translateY(-${finalIndex * 100}px)`;
         callback(finalIndex);
@@ -60,7 +115,7 @@ function spinAll() {
     updateText("EN ATTENTE DU RESULTAT");
     playRandomSpinSound();
 
-    const forceWin = (spinsWithoutWin >= 2);
+    const forceWin = (spinsWithoutWin >= randomInt(3,5)); //nombre de partie avant de forcer une win
     let forcedIndex = null;
 
     if (forceWin) {
@@ -99,7 +154,51 @@ function checkWin() {
             setTimeout(() => {
                 statut.classList.remove("jackpot");
             }, 2000);
-        } else {
+        } else if (symbols[a].name === "bombe" || symbols[a].name === "crane" || symbols[a].name === "tax" || symbols[a].name === "requin" || symbols[a].name === "araigné") {
+            const gain = symbols[a].gain;
+            updateText(`PERDU : ${gain}$`);
+            updateCommentaire(symbols[a].commentaire);
+            updateMoney(gain);
+            playSound("sound-lose2");
+        } else if (symbols[a].name === "poisson") {
+            const gain = symbols[a].gain;
+            updateText(`???`);
+            updateCommentaire(symbols[a].commentaire);
+            updateMoney(gain);
+            document.getElementById("poisson").style.visibility = "visible";
+            setTimeout(() => {
+                document.getElementById("poisson").style.visibility = "collapse";
+            },18000)
+        } else if (symbols[a].name === "six") {
+            money = 666;
+            document.getElementById("money").textContent = `💰 ${money}$`;
+            updateText(`666`);
+            updateCommentaire(symbols[a].commentaire);
+        } else if (symbols[a].name === "tv") {
+            const gain = symbols[a].gain;
+            updateText(`GAGNE`);
+            updateCommentaire(symbols[a].commentaire);
+            updateMoney(gain);
+            document.getElementById("tv").style.visibility = "visible";
+            playSound("its-tv-time");
+            setTimeout(() => {
+                document.getElementById("tv").style.visibility = "collapse";
+            },32000)
+        } else if (symbols[a].name === "cadena") {
+            const gain = symbols[a].gain;
+            updateText(`PERDU`);
+            updateCommentaire(symbols[a].commentaire);
+            updateMoney(gain);
+            playSound("sound-lose2");
+            isLock = true;
+        } else if (symbols[a].name === "chapeau de magicien") {
+            updateText(`PERDU`);
+            playSound("sound-lose2");
+            updateCommentaire(symbols[a].commentaire);
+            document.getElementById("money").textContent = `💰 ????`;
+        }
+        
+        else {
             const gain = symbols[a].gain;
             updateText(`GAGNE : ${gain}$`);
             updateCommentaire(symbols[a].commentaire);
@@ -121,14 +220,23 @@ function checkWin() {
         spinsWithoutWin++;
     }
 
-
-
     setTimeout(() => {
-        isSpinning = false;
-        lever.style.backgroundColor = "var(--levier)"
-        updateText("REJOUER ?");
-        statut.classList.add("blink");
-        verifMoney()
+        if (!isLock) {
+            isSpinning = false;
+            lever.style.backgroundColor = "var(--levier)"
+            updateText("REJOUER ?");
+            statut.classList.add("blink");
+            verifMoney()
+        } else {
+            setTimeout(() => {
+                isSpinning = false
+                isLock = false
+                lever.style.backgroundColor = "var(--levier)"
+                updateText("REJOUER ?");
+                statut.classList.add("blink");
+                verifMoney()
+            },60000)
+        }
     }, 5000);
 
 }
@@ -164,7 +272,16 @@ const symbols = [
     { name: "crane", gain: -100, weight: 15, commentaire: "Mauvais Choix" },
     { name: "pastèque", gain: 25, weight: 50, commentaire: "Yummy !" },
     { name: "requin", gain: -15, weight: 60, commentaire: "Moins 10 d'Aura" },
-    { name: "couronne", gain: 1000, weight: 5, commentaire: "Votre Altesse, vous êtes royal !" }
+    { name: "couronne", gain: 1000, weight: 5, commentaire: "Votre Altesse, vous êtes royal !" },
+    { name: "poisson", gain: 1, weight: 10, commentaire: "" },
+    { name: "pomme d'or", gain: 750, weight: 60, commentaire: "Tout est meilleur en or" },
+    { name: "six", gain: 666, weight: 12, commentaire: "Diabolique" },
+    { name: "chapeau de magicien", gain: 0, weight: 52, commentaire: "Abracadabra" },
+    { name: "bombe", gain: -9999999, weight: 3, commentaire: "Explose !" },
+    { name: "tv", gain: 29, weight: 47, commentaire: "It's TV Time !" },
+    { name: "cadena", gain: 0, weight: 52, commentaire: "Tu peux plus gambling, hein ?" },
+    { name: "tax", gain: -50, weight: 40, commentaire: "Encore des taxs ??" },
+    { name: "lingot", gain: 5000, weight: 2, commentaire: "J'suis riche" }
 ];
 
 
