@@ -31,21 +31,25 @@ document.addEventListener("keydown", e => {
 });
 
 //changé les valeurs pour déclenché un symbole si la touche est pressé
-
-if (cheat) {
-    document.addEventListener("keydown", e => {
+document.addEventListener("keydown", e => {
+    if (cheat) {
         if (e.key === "9") DEBUG_FORCE_SYMBOL = "bombe";
-        if (e.key === "8") DEBUG_FORCE_SYMBOL = "crane";
+        if (e.key === "8") DEBUG_FORCE_SYMBOL = "poison";
         if (e.key === "7") DEBUG_FORCE_SYMBOL = "araigné";
         if (e.key === "6") DEBUG_FORCE_SYMBOL = "cerise";
         if (e.key === "5") DEBUG_FORCE_SYMBOL = "cadena";
-        if (e.key === "4") DEBUG_FORCE_SYMBOL = "six";
+        if (e.key === "4") DEBUG_FORCE_SYMBOL = "lingot";
         if (e.key === "3") DEBUG_FORCE_SYMBOL = "poisson";
         if (e.key === "2") DEBUG_FORCE_SYMBOL = "tv";
         if (e.key === "1") DEBUG_FORCE_SYMBOL = "seven";
         if (e.key === "0") DEBUG_FORCE_SYMBOL = null;
-    });
-}
+    } else {
+        DEBUG_FORCE_SYMBOL = null;
+    }
+    // console.log(DEBUG_FORCE_SYMBOL)
+});
+    
+
 
 function getSymbolIndexByName(name) {
     return symbols.findIndex(s => s.name === name);
@@ -205,8 +209,12 @@ function checkWin() {
             playSound("sound-lose2");
             updateCommentaire(symbols[a].commentaire);
             document.getElementById("money").textContent = `💰 ????`;
+        } else if (symbols[a].name === "note") {
+            updateText(`MUSIQUE`);
+            playSound("music");
+            updateCommentaire(symbols[a].commentaire);
+            document.getElementById("money").textContent = `💰 ????`;
         }
-        
         else {
             const gain = symbols[a].gain;
             updateText(`GAGNE : ${gain}$`);
@@ -298,7 +306,8 @@ const symbols = [
     { name: "four", gain: 150, weight: 36, commentaire: "Un peu moins et c'est l'erreur" },
     { name: "poison", gain: -1000, weight: 7, commentaire: "Empoisonné !" },
     { name: "three", gain: 80, weight: 56, commentaire: "Pas mal" },
-    { name: "fives", gain: 350, weight: 26, commentaire: "Presque !" }
+    { name: "fives", gain: 350, weight: 26, commentaire: "Presque !" },
+    { name: "note", gain: 4, weight: 61, commentaire: "C'est musicale !" }
 ];
 
 

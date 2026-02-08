@@ -80,6 +80,7 @@ main {
     display: flex;
     flex-direction: column;
     transition: transform 0.8s ease-out;
+    /*gap: 10px;*/
 }
 
 .reel img {
