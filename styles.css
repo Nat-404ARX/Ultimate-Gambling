@@ -317,3 +317,39 @@ h3 {
         box-shadow: 0 0 15px var(--text);
     }
 }
+
+
+.horizontal-mirror {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        -ms-transform: scaleX(-1);
+        transform: scaleX(-1);
+}
+
+#game {
+    transition: transform 0.8s ease-in-out;
+}
+
+@keyframes shake {
+    0% { transform: rotate(180deg) translate(0, 0); }
+    25% { transform: rotate(180deg) translate(2px, -2px); }
+    50% { transform: rotate(180deg) translate(-2px, 2px); }
+    75% { transform: rotate(180deg) translate(2px, 2px); }
+    100% { transform: rotate(180deg) translate(0, 0); }
+}
+
+.reverse-screen {
+    animation: shake 0.3s infinite;
+}
+
+/*
+.reverse-screen {
+    transform: rotate(180deg);
+}
+
+
+.reverse-screen {
+    transform: scaleY(-1);
+}
+*/

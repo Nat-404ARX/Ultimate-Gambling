@@ -35,10 +35,10 @@ document.addEventListener("keydown", e => {
 document.addEventListener("keydown", e => {
     if (cheat) {
         if (e.key === "9") DEBUG_FORCE_SYMBOL = "bombe";
-        if (e.key === "8") DEBUG_FORCE_SYMBOL = "crane";
-        if (e.key === "7") DEBUG_FORCE_SYMBOL = "araigné";
+        if (e.key === "8") DEBUG_FORCE_SYMBOL = "lucas";
+        if (e.key === "7") DEBUG_FORCE_SYMBOL = "chapeau de magicien";
         if (e.key === "6") DEBUG_FORCE_SYMBOL = "cerise";
-        if (e.key === "5") DEBUG_FORCE_SYMBOL = "cadena";
+        if (e.key === "5") DEBUG_FORCE_SYMBOL = "note";
         if (e.key === "4") DEBUG_FORCE_SYMBOL = "lingot";
         if (e.key === "3") DEBUG_FORCE_SYMBOL = "poisson";
         if (e.key === "2") DEBUG_FORCE_SYMBOL = "tv";
@@ -219,6 +219,12 @@ function checkWin() {
             playSound("music");
             updateCommentaire(symbols[a].commentaire);
             document.getElementById("money").textContent = `💰 ????`;
+        } else if (symbols[a].name === "lucas") {
+            updateText(`A TON TOUR D'ETRE CHAUVE`);
+            playSound("reine");
+            updateCommentaire(symbols[a].commentaire);
+            document.getElementById("money").textContent = `💰 ????`;
+            reverseScreen();
         }
         else {
             const gain = symbols[a].gain;
@@ -312,7 +318,8 @@ const symbols = [
     { name: "poison", gain: -1000, weight: 7, commentaire: "Empoisonné !" },
     { name: "three", gain: 80, weight: 56, commentaire: "Pas mal" },
     { name: "fives", gain: 350, weight: 26, commentaire: "Presque !" },
-    { name: "note", gain: 4, weight: 61, commentaire: "C'est musicale !" }
+    { name: "note", gain: 4, weight: 61, commentaire: "C'est musicale !" },
+    { name: "lucas", gain: 0, weight: 55, commentaire: "Libéré Délivré" }
 ];
 
 
@@ -446,4 +453,12 @@ function toggleMute() {
     document.querySelectorAll("audio").forEach(a => a.muted = muted);
 }
 
-//idée mettre un symbole qui fait perdre instant le joueur
+function reverseScreen(duration = 10000) {
+    const game = document.getElementById("game");
+
+    game.classList.add("reverse-screen");
+
+    setTimeout(() => {
+        game.classList.remove("reverse-screen");
+    }, duration);
+}
